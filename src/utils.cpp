@@ -16,7 +16,7 @@ namespace utils {
     }
 
     std::string random_date() {
-        uint32_t year = 2020 + random_uint32(2);
+        uint32_t year = 2022 + random_uint32(2);
         uint32_t month = 1 + random_uint32(11);
         uint32_t day;
         if (month == 2) day = 1 + random_uint32(27);
@@ -24,7 +24,10 @@ namespace utils {
             day = 1 + random_uint32(30);
         else day = 1 + random_uint32(29);
         std::stringstream ss;
-        ss << year << '-' << month << '-' << day;
+        uint32_t hour = random_uint32(25) % 24;
+        uint32_t minute = random_uint32(61) % 60;
+        uint32_t second = random_uint32(61) % 60;
+        ss << year << '-' << month << '-' << day << " " << hour << ":" << minute <<":" << second;
         return ss.str();
     }
 

@@ -23,9 +23,14 @@ class Category{
 public:
     explicit Category(const std::string& categoryName){
         this->categoryID = ++categoryIdCount;
-        this->categoryName = categoryName;
+        this->categoryName = utils::stringify(categoryName);
     }
-    std::string to_sql() const;
+    void to_sql() const{
+        FILE* f = fopen(CATEGORIES_FILE, "a");
+        fprintf(f, CATEGORY_TEMPLATE, this->categoryID, this->categoryName.c_str());
+        fclose(f);
+    }
+
     static std::vector<Category*> get_categories(){
         if(globalCategories.empty()) {
             std::cout << "[LOG] Loading categories\n";
@@ -43,22 +48,40 @@ public:
         }
         return globalCategories;
     }
+
+    [[nodiscard]] uint32_t get_id() const{
+        return this->categoryID;
+    }
 };
 
 
 class Topic{
     uint32_t topicID;
     std::string topicName;
-    bool accepted;
+    std::string accepted;
     std::set<Category*> categories;
 public:
     explicit Topic(const std::string& topicName, const std::set<Category*>& categories){
         this->topicID = ++topicIdCount;
-        this->topicName = topicName;
-        this->accepted = utils::random_bool();
+        this->topicName = utils::stringify(topicName);
+        if(utils::random_bool()){
+            this->accepted = utils::stringify("TRUE");
+        }
+        else{
+            this->accepted = utils::stringify("FALSE");
+        }
         this->categories = categories;
     }
-    std::string to_sql() const;
+
+    void to_sql(){
+        FILE* f = fopen(TOPICS_FILE, "a");
+        fprintf(f, TOPIC_TEMPLATE, this->topicID, this->topicName.c_str(), this->accepted.c_str());
+        for (auto i : this->categories){
+            fprintf(f, CATEGORY_TOPIC_TEMPLATE, this->topicID, i->get_id());
+        }
+        fclose(f);
+    }
+
     bool contains(Category* c){
         return categories.contains(c);
     }
@@ -97,7 +120,11 @@ public:
     }
 
     [[nodiscard]] bool isAccepted() const{
-        return this->accepted;
+        return this->accepted == utils::stringify("TRUE");
+    }
+
+    uint32_t get_id() const{
+        return this->topicID;
     }
 };
 

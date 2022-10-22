@@ -18,12 +18,17 @@ class Message{
 public:
     explicit Message(Publisher* sender, Publisher* receiver, const std::string& content){
         this->messageID = ++messageIdCount;
-        this->content = content;
-        this->date = utils::random_date();
+        this->content = utils::stringify(content);
+        this->date = utils::stringify(utils::random_date());
         this->sender = sender;
         this->receiver = receiver;
     }
-    std::string to_sql() const;
+    void to_sql() const{
+        FILE* f = fopen(MESSAGE_OUTPUT, "a");
+        fprintf(f, USER_MESSAGE_TEMPLATE, this->messageID, this->content.c_str(), this->date.c_str());
+        fprintf(f, USER_CONVERSATION_TEMPLATE, this->messageID, sender->get_id(), receiver->get_id());
+        fclose(f);
+    }
 };
 
 #endif //SQL_POPULATOR_MESSAGE_H

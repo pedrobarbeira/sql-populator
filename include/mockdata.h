@@ -41,7 +41,7 @@ namespace mockdata {
     std::vector<Friendship*>generate_relationships(const std::vector<Publisher*>& pubs);
     std::vector<Article*> generate_articles(uint32_t n, const std::vector<Publisher*>& pubs);
     std::vector<Message*> generate_messages(const std::vector<Friendship*>& friends);
-    std::vector<UserReport*> generate_reports(const std::vector<Post*>& posts, const std::vector<Publisher*>& pubs);
+    std::vector<UserReport*> generate_reports(const std::vector<Post*>& posts, const bool& article, const std::vector<Publisher*>& pubs);
     std::vector<Favorite*> generate_favorites(const std::vector<Article*>& articles, const std::vector<Publisher*>& pubs);
     void generate_mock_data();
     void sqlizer();

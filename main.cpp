@@ -2,6 +2,6 @@
 #include "include/mockdata.h"
 
 int main() {
-    mockdata::sqlizer();
+    std::cout << "hello world";
     return 0;
 }

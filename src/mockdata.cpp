@@ -220,7 +220,7 @@ Article *mockdata::mockdata<T, K>::generate_article(const std::vector<Publisher*
     Publisher* author = pubs[i];
     std::vector<Category*> articleCategories = generate_article_categories();
     std::vector<Topic*> articleTopics = generate_article_topics(articleCategories);
-    std::vector<Comment*> comments = generate_article_comments(pubs);
+    std::vector<Comment*> comments;// = generate_article_comments(pubs);
     return new Article(title, description, body, author, articleCategories, articleTopics, comments);
 }
 
@@ -374,7 +374,7 @@ std::vector<Favorite*>mockdata::generate_favorites(const std::vector<Article *> 
 }
 
 std::vector<UserReport *>
-mockdata::generate_reports(const std::vector<Post*> &posts, const std::vector<Publisher*> &pubs) {
+mockdata::generate_reports(const std::vector<Post*> &posts, const bool& article, const std::vector<Publisher*> &pubs) {
     std::vector<UserReport*> toReturn;
     std::vector<ReportReason*> reasons = ReportReason::get_reasons();
     uint32_t j, l, m;
@@ -383,7 +383,7 @@ mockdata::generate_reports(const std::vector<Post*> &posts, const std::vector<Pu
         for(uint32_t k = 0; k < MAX_REPORTS; k++){
             l = utils::random_uint32(pubs.size());
             m = utils::random_uint32(NUMBER_REASONS);
-            auto report = new UserReport(reasons[m], posts[j], pubs[l]);
+            auto report = new UserReport(reasons[m], posts[j], article, pubs[l]);
             toReturn.push_back(report);
         }
     }

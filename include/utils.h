@@ -27,6 +27,8 @@ namespace utils{
     uint32_t wcount(const std::string& str);
     std::string extract_csv(std::string line);
     void name_normalizer(std::string& str);
+
+
 }
 
 #endif //SQL_POPULATOR_UTILS_H
