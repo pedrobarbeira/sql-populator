@@ -17,7 +17,7 @@
 #include "exceptions.h"
 
 namespace utils{
-    uint32_t random_uint32(int max);
+    uint32_t random_uint32(uint32_t max);
     std::string random_uuid();
     std::string random_date();
     bool random_bool();

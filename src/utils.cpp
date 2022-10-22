@@ -5,7 +5,7 @@
 #include "../include/utils.h"
 
 namespace utils {
-    uint32_t random_uint32(int max) {
+    uint32_t random_uint32(uint32_t max) {
         std::random_device rd;
         std::uniform_int_distribution<int> dist(1, max);
         return dist(rd);

@@ -281,31 +281,31 @@ Article *mockdata::mockdata<T>::generate_article(const std::vector<Publisher*>& 
             std::cout << e.what();
         }
     }
-    std::vector<std::string> lines = data.find(SENTENCES_KEY)->second;
-    unsigned int i = utils::random_uint32(lines.size());
-    std::string title = lines[i];
+    std::vector<std::string> sentences = data.find(SENTENCES_KEY)->second;
+    unsigned int i = utils::random_uint32(sentences.size());
+    std::string title = sentences[i];
     std::stringstream ss;
     uint32_t count = 0;
     for(;count<10;count++){
-        i = utils::random_uint32(lines.size());
-        ss << lines[i];
+        i = utils::random_uint32(sentences.size());
+        ss << sentences[i];
         if(!ss.str().empty()) ss << " ";
     }
     std::string description = ss.str();
     ss.clear();
     count = 0;
     while (count < MIN_ARTICLE_WORDS) {
-        i = utils::random_uint32(lines.size());
-        ss << lines[i];
+        i = utils::random_uint32(sentences.size());
+        ss << sentences[i];
         if (!ss.str().empty()) ss << " ";
-        count += utils::wcount(lines[i]);
+        count += utils::wcount(sentences[i]);
     }
     std::string body = ss.str();
     i = utils::random_uint32(pubs.size());
     Publisher* author = pubs[i];
-    std::vector<Category*> categories = generate_article_categories();
-    std::vector<Topic*> topics = generate_article_topics(categories);
-    return new Article(title, description, body, author, categories, topics);
+    std::vector<Category*> articleCategories = generate_article_categories();
+    std::vector<Topic*> articleTopics = generate_article_topics(articleCategories);
+    return new Article(title, description, body, author, articleCategories, articleTopics);
 }
 
 std::vector<Article*> mockdata::generate_articles(uint32_t n, const std::vector<Publisher *> &pubs) {
