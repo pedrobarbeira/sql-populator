@@ -1,3 +1,0 @@
-/home/pbarbeira/dev/cpp/sql-populator/cmake-build-debug/CMakeFiles/sql_populator.dir
-/home/pbarbeira/dev/cpp/sql-populator/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/pbarbeira/dev/cpp/sql-populator/cmake-build-debug/CMakeFiles/rebuild_cache.dir
