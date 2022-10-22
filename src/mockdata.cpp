@@ -1,52 +1,5 @@
 #include "../include/mockdata.h"
 
-
-template<typename T>
-void mockdata::mockdata<T>::load_categories() {
-    std::cout << "[LOG] Loading categories\n";
-    file = std::ifstream(CATEGORIES_FILE);
-    if(file.fail()){
-        throw FileNotFoundException(CATEGORIES_FILE);
-    }
-    std::string line;
-    while(!file.eof()){
-        getline(file, line);
-        auto* category = new Category(line);
-        categories.push_back(category);
-    }
-    file.close();
-}
-
-template<typename T>
-void mockdata::mockdata<T>::load_topics() {
-    try {
-        load_categories();
-    } catch (const FileNotFoundException &e) {
-        std::cout << e.what();
-    }
-    file = std::ifstream(TOPICS_FILE);
-    if (file.fail()) {
-        throw FileNotFoundException(TOPICS_FILE);
-    }
-    std::string line;
-    std::vector<std::string> words;
-    while (!file.eof()) {
-        getline(file, line);
-        words.push_back(line);
-    }
-    uint32_t j, k;
-    for(int i = 0; i < MAX_TOPICS; i++){
-        k = utils::random_uint32(words.size());
-        std::set<Category*> topicCategories;
-        for(j = 0; j < utils::random_uint32(categories.size()); j++){
-            uint32_t x = utils::random_uint32(categories.size());
-            topicCategories.insert(categories[x]);
-        }
-        auto topic = new Topic(words[k], topicCategories);
-        topics.push_back(topic);
-    }
-}
-
 template<typename T>
 void mockdata::mockdata<T>::load_name_data() {
     std::cout << "[LOG] Loading name data\n";
@@ -158,13 +111,6 @@ Publisher* mockdata::mockdata<T>::generate_user() {
             std::cout << e.what();
         }
     }
-    if(topics.empty()) {
-        try {
-            load_topics();
-        }catch (const FileNotFoundException& e){
-            std::cout << e.what();
-        }
-    }
     while(true) {
         int size = data.find(NAMES_KEY)->second.size();
         uint32_t i = utils::random_uint32(size);
@@ -237,33 +183,6 @@ Friendship *mockdata::mockdata<T>::generate_friendship(Publisher &pub, const std
     return new Friendship(pub.get_id(), pubs[i]->get_id());
 }
 
-
-std::vector<Publisher*> mockdata::generate_users(uint32_t n){
-    std::map<std::string, int> nameMap;
-    mockdata<std::vector<std::string>> mock;
-    std::vector<Publisher*> toReturn;
-    for(int i = 1; i <= n; i++){
-        std::cout << "[LOG] Generating user " << i << "\n";
-        toReturn.push_back(mock.generate_user());
-    }
-    std::cout << "[LOG] Clearing name data\n";
-    mock.clear_name_data();
-    return toReturn;
-}
-
-std::vector<Friendship*> mockdata::generate_relationships(const std::vector<Publisher*> &pubs) {
-    std::vector<Friendship*> toReturn;
-    mockdata<std::set<std::string>> mock;
-    for(auto pub : pubs) {
-        uint32_t i = utils::random_uint32(MAX_FRIENDS);
-        while (i > 0) {
-            toReturn.push_back(mock.generate_friendship(*pub, pubs));
-            i--;
-        }
-    }
-    return toReturn;
-}
-
 template<typename T>
 Article *mockdata::mockdata<T>::generate_article(const std::vector<Publisher*>& pubs) {
     if (!data.contains(SENTENCES_KEY)) {
@@ -271,13 +190,6 @@ Article *mockdata::mockdata<T>::generate_article(const std::vector<Publisher*>& 
             load_sentence_data();
         }
         catch (const FileNotFoundException &e) {
-            std::cout << e.what();
-        }
-    }
-    if(categories.empty()) {
-        try {
-            load_topics();
-        }catch (const FileNotFoundException& e){
             std::cout << e.what();
         }
     }
@@ -306,6 +218,32 @@ Article *mockdata::mockdata<T>::generate_article(const std::vector<Publisher*>& 
     std::vector<Category*> articleCategories = generate_article_categories();
     std::vector<Topic*> articleTopics = generate_article_topics(articleCategories);
     return new Article(title, description, body, author, articleCategories, articleTopics);
+}
+
+std::vector<Publisher*> mockdata::generate_users(uint32_t n){
+    std::map<std::string, int> nameMap;
+    mockdata<std::vector<std::string>> mock;
+    std::vector<Publisher*> toReturn;
+    for(int i = 1; i <= n; i++){
+        std::cout << "[LOG] Generating user " << i << "\n";
+        toReturn.push_back(mock.generate_user());
+    }
+    std::cout << "[LOG] Clearing name data\n";
+    mock.clear_name_data();
+    return toReturn;
+}
+
+std::vector<Friendship*> mockdata::generate_relationships(const std::vector<Publisher*> &pubs) {
+    std::vector<Friendship*> toReturn;
+    mockdata<std::set<std::string>> mock;
+    for(auto pub : pubs) {
+        uint32_t i = utils::random_uint32(MAX_FRIENDS);
+        while (i > 0) {
+            toReturn.push_back(mock.generate_friendship(*pub, pubs));
+            i--;
+        }
+    }
+    return toReturn;
 }
 
 std::vector<Article*> mockdata::generate_articles(uint32_t n, const std::vector<Publisher *> &pubs) {

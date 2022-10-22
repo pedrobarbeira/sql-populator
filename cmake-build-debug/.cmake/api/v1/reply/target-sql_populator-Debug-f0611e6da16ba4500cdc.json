@@ -204,7 +204,7 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/reportreason.h",
+			"path" : "include/reports.h",
 			"sourceGroupIndex" : 1
 		}
 	],

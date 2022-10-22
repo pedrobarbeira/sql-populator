@@ -17,8 +17,6 @@ namespace mockdata {
     template<typename T>
     class mockdata {
         std::ifstream file;
-        std::vector<Category*> categories;
-        std::vector<Topic*> topics;
         std::map<std::string, T> data;
         std::set<std::string> nameMap;
 
@@ -26,8 +24,6 @@ namespace mockdata {
         void load_surname_data();
         void load_publisher_data(const std::vector<Publisher*>& pubs);
         void load_sentence_data();
-        void load_categories();
-        void load_topics();
         std::vector<Topic*> generate_user_topics() const;
         std::vector<Topic*> generate_proposed_topics();
         std::vector<Category*> generate_article_categories() const;
@@ -38,7 +34,6 @@ namespace mockdata {
         Article* generate_article(const std::vector<Publisher*>& pubs);
         Message* generate_message(Friendship* f);
         void clear_name_data();
-        void clear_friendship_data();
         void clear_sentence_data();
 
         void driver();

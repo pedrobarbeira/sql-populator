@@ -6,6 +6,7 @@
 #define MAX_COMMENT_CHAR 500
 #define MAX_TOPICS 100
 #define MAX_SEVERITY 7
+#define MAX_REPORTS
 #define MIN_ARTICLE_WORDS 700
 #define PRINT_TO_TERMINAL true
 
@@ -17,6 +18,7 @@
 #define SENTENCES_FILE "data/sentences.tsv"
 #define CATEGORIES_FILE "data/categories.txt"
 #define TOPICS_FILE "data/topics.txt"
+#define REASONS_FILE "data/reasons.txt"
 
 #define NAMES_KEY "names"
 #define SURNAMES_KEY "surnames"
