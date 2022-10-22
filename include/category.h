@@ -11,15 +11,18 @@
 class Category;
 class Topic;
 
-std::vector<Category*> globalCategories;
-std::vector<Topic*> topics;
+static uint32_t categoryIdCount = 0;
+static uint32_t topicIdCount = 0;
+
+static std::vector<Category*> globalCategories;
+static std::vector<Topic*> globalTopics;
 
 class Category{
-    std::string categoryID;
+    uint32_t categoryID;
     std::string categoryName;
 public:
     explicit Category(const std::string& categoryName){
-        this->categoryID = utils::random_uuid();
+        this->categoryID = ++categoryIdCount;
         this->categoryName = categoryName;
     }
     std::string to_sql() const;
@@ -44,13 +47,13 @@ public:
 
 
 class Topic{
-    std::string topicID;
+    uint32_t topicID;
     std::string topicName;
     bool accepted;
     std::set<Category*> categories;
 public:
     explicit Topic(const std::string& topicName, const std::set<Category*>& categories){
-        this->topicID = utils::random_uuid();
+        this->topicID = ++topicIdCount;
         this->topicName = topicName;
         this->accepted = utils::random_bool();
         this->categories = categories;
@@ -60,7 +63,7 @@ public:
         return categories.contains(c);
     }
     static std::vector<Topic*> get_topics(){
-        if(topics.empty()){
+        if(globalTopics.empty()){
             if(globalCategories.empty()){
                 try {
                     Category::get_categories();
@@ -87,10 +90,14 @@ public:
                     topicCategories.insert(globalCategories[x]);
                 }
                 auto topic = new Topic(words[k], topicCategories);
-                topics.push_back(topic);
+                globalTopics.push_back(topic);
             }
         }
-        return topics;
+        return globalTopics;
+    }
+
+    [[nodiscard]] bool isAccepted() const{
+        return this->accepted;
     }
 };
 

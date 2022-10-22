@@ -12,4 +12,4 @@ if(NOT Boost_FOUND)
     message(FATAL_ERROR "Could not find boost!")
 endif()
 
-add_executable(sql_populator main.cpp src/publisher.cpp include/publisher.h src/mockdata.cpp include/mockdata.h include/exceptions.h include/friendship.h include/configs.h include/article.h include/message.h include/utils.h src/utils.cpp include/object.h include/category.h include/reports.h)
+add_executable(sql_populator main.cpp include/publisher.h src/mockdata.cpp include/mockdata.h include/exceptions.h include/friendship.h include/configs.h include/article.h include/message.h include/utils.h src/utils.cpp include/category.h include/reports.h)

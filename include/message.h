@@ -7,15 +7,21 @@
 
 #include "utils.h"
 
+static uint32_t messageIdCount = 0;
+
 class Message{
-    std::string messageID;
+    uint32_t messageID;
     std::string content;
     std::string date;
+    Publisher* sender;
+    Publisher* receiver;
 public:
-    explicit Message(const std::string& content){
-        this->messageID = utils::random_uuid();
+    explicit Message(Publisher* sender, Publisher* receiver, const std::string& content){
+        this->messageID = ++messageIdCount;
         this->content = content;
         this->date = utils::random_date();
+        this->sender = sender;
+        this->receiver = receiver;
     }
     std::string to_sql() const;
 };
