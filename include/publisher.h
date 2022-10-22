@@ -2,20 +2,13 @@
 #define SQL_POPULATOR_PUBLISHER_H
 
 #include <iostream>
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/random_generator.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/lexical_cast.hpp>
-#include <openssl/sha.h>
-#include <openssl/evp.h>
 #include <cstdio>
-#include <random>
 #include "configs.h"
+#include "utils.h"
+#include "object.h"
+#include "category.h"
 
-uint32_t random_number(int max);
-std::string stringify(std::string str);
-
-class Publisher {
+class Publisher : public Object{
     std::string userID;
     std::string name;
     std::string password;
@@ -27,8 +20,10 @@ class Publisher {
     std::string bio;
     int reputation;
     bool banned;
+    std::vector<Topic*> feedTopic;
+    std::vector<Topic*> proposedTopics;
 public:
-    explicit Publisher(const std::string& username);
+    Publisher(const std::string& username, const std::vector<Topic*>& feedTopic, const std::vector<Topic*>& proposedTopics);
     void to_sql(bool terminal);
 
     [[nodiscard]] uint32_t get_friends() const{
@@ -42,6 +37,17 @@ public:
     void add_friend(){
         this->nFriends++;
     }
+};
+
+class Favorite{
+    std::string publisherID;
+    std::string articleID;
+public:
+    Favorite(const std::string& publisherID, const std::string& articleID){
+        this->publisherID = publisherID;
+        this->articleID = articleID;
+    }
+    std::string to_sql();
 };
 
 

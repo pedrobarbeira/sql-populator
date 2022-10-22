@@ -70,6 +70,13 @@ build CMakeFiles/sql_populator.dir/src/mockdata.cpp.o: CXX_COMPILER__sql_populat
   OBJECT_DIR = CMakeFiles/sql_populator.dir
   OBJECT_FILE_DIR = CMakeFiles/sql_populator.dir/src
 
+build CMakeFiles/sql_populator.dir/src/utils.cpp.o: CXX_COMPILER__sql_populator_Debug /home/pbarbeira/dev/cpp/sql-populator/src/utils.cpp || cmake_object_order_depends_target_sql_populator
+  DEP_FILE = CMakeFiles/sql_populator.dir/src/utils.cpp.o.d
+  FLAGS = -g -std=gnu++23
+  INCLUDES = -I/usr/local/include/boost
+  OBJECT_DIR = CMakeFiles/sql_populator.dir
+  OBJECT_FILE_DIR = CMakeFiles/sql_populator.dir/src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target sql_populator
@@ -78,7 +85,7 @@ build CMakeFiles/sql_populator.dir/src/mockdata.cpp.o: CXX_COMPILER__sql_populat
 #############################################
 # Link the executable sql_populator
 
-build sql_populator: CXX_EXECUTABLE_LINKER__sql_populator_Debug CMakeFiles/sql_populator.dir/main.cpp.o CMakeFiles/sql_populator.dir/src/publisher.cpp.o CMakeFiles/sql_populator.dir/src/mockdata.cpp.o
+build sql_populator: CXX_EXECUTABLE_LINKER__sql_populator_Debug CMakeFiles/sql_populator.dir/main.cpp.o CMakeFiles/sql_populator.dir/src/publisher.cpp.o CMakeFiles/sql_populator.dir/src/mockdata.cpp.o CMakeFiles/sql_populator.dir/src/utils.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/sql_populator.dir
   POST_BUILD = :

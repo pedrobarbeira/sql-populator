@@ -13,19 +13,16 @@ class Friendship{
     std::string user2ID;
 public:
     Friendship(const std::string& user1ID, const std::string& user2ID){
-        boost::uuids::uuid uuid = boost::uuids::random_generator()();
-        this->relationshipID = boost::lexical_cast<std::string>(uuid);
+        this->relationshipID = utils::random_uuid();
         this->user1ID = user1ID;
         this->user2ID = user2ID;
     }
     void to_sql(bool terminal){
         if(terminal){
-            printf(RELATIONSHIP_TEMPLATE, this->relationshipID.c_str());
             printf(FRIENDSHIP_TEMPLATE, this->relationshipID.c_str(), this->user1ID.c_str(), this->user2ID.c_str());
         }
         else{
             FILE* file = fopen(RELATIONSHIP_OUTPUT, "a");
-            fprintf(file, RELATIONSHIP_TEMPLATE, this->relationshipID.c_str());
             fprintf(file, FRIENDSHIP_TEMPLATE, this->relationshipID.c_str(), this->user1ID.c_str(), this->user2ID.c_str());
         }
 
