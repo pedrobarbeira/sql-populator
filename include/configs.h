@@ -27,7 +27,7 @@
 #define RELATIONSHIP_OUTPUT "out/relationship-data.txt"
 #define ARTICLE_OUTPUT "out/article-data.txt"
 #define MESSAGE_OUTPUT "out/message-data.txt"
-#define REPORT_OUTPUT "out/reportdata.txt"
+#define REPORT_OUTPUT "out/report-data.txt"
 #define FAVORITE_OUTPUT "out/favorite-data.txt"
 #define COMMENT_OUTPUT "out/comment-data.txt"
 #define CATEGORIES_OUTPUT "out/categories.txt"
