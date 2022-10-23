@@ -28,8 +28,9 @@ namespace mockdata {
         std::vector<Topic*> generate_proposed_topics() const;
         std::vector<Category*> generate_article_categories() const;
         std::vector<Topic*> generate_article_topics(const std::vector<Category*>& articleCategories) const;
-        std::vector<Comment*> generate_article_comments(const std::vector<Publisher*>& pubs) const;
-        std::vector<Comment*> generate_comment_answers(const std::vector<Publisher*>& pubs) const;
+        Comment * generate_comment(const std::vector<Publisher*>& pubs, bool answer) const;
+        std::vector<Comment*> generate_article_comments(const std::vector<Publisher*>& pubs);
+        std::vector<Comment*> generate_comment_answers(const std::vector<Publisher*>& pubs, bool answer) const;
     public:
         Publisher* generate_user();
         Friendship* generate_friendship(Publisher* pub, const std::vector<Publisher*>& pubs);
@@ -37,11 +38,12 @@ namespace mockdata {
         std::vector<Message*> generate_message(Friendship* f);
         void clear_name_data();
     };
+    std::vector<Post*> get_posts(const std::vector<Article*>& articles);
     std::vector<Publisher*> generate_users(uint32_t n);
     std::vector<Friendship*>generate_relationships(const std::vector<Publisher*>& pubs);
     std::vector<Article*> generate_articles(uint32_t n, const std::vector<Publisher*>& pubs);
     std::vector<Message*> generate_messages(const std::vector<Friendship*>& friends);
-    std::vector<UserReport*> generate_reports(const std::vector<Post*>& posts, const bool& article, const std::vector<Publisher*>& pubs);
+    std::vector<UserReport*> generate_reports(const std::vector<Post*>& posts, const std::vector<Publisher*>& pubs);
     std::vector<Favorite*> generate_favorites(const std::vector<Article*>& articles, const std::vector<Publisher*>& pubs);
     void generate_mock_data();
     void sqlizer();

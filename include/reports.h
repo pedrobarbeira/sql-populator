@@ -60,15 +60,13 @@ class UserReport{
     uint32_t reportID;
     ReportReason* reason;
     Post* post;
-    bool article;
     Publisher* reporter;
     Publisher* reportee;
 public:
-    explicit UserReport(ReportReason* reason, Post* post, bool article, Publisher* reporter){
+    explicit UserReport(ReportReason* reason, Post* post, Publisher* reporter){
         this->reportID = ++userReportIdCount;
         this->reason = reason;
         this->post = post;
-        this->article = article;
         this->reporter = reporter;
         this->reportee = post->get_author();
     }
@@ -77,7 +75,7 @@ public:
         FILE* f =fopen(REPORT_OUTPUT, "a");
         fprintf(f, USER_REPORT_TEMPLATE, this->reportID, this->reason->get_id());
         fprintf(f, REPORT_TEMPLATE, this->reportID, this->reporter->get_id(), this->reportee->get_id());
-        if(this->article) {
+        if(this->post->get_type() == ARTICLE) {
             fprintf(f, REPORTED_ARTICLE_TEMPLATE, this->reportID, this->post->get_id());
         }
         else{

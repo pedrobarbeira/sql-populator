@@ -16,14 +16,16 @@ class Comment;
 class Post {
 protected:
     uint32_t postID;
+    PostType type;
     uint32_t nLikes;
     uint32_t nDislikes;
     uint32_t nComments;
     std::string postDate;
     Publisher* author;
 public:
-    explicit Post(uint32_t id, uint32_t nComments, Publisher* author){
+    explicit Post(uint32_t id, uint32_t nComments, Publisher* author, PostType type){
         this->postID = id;
+        this->type = type;
         this->nLikes = utils::random_uint32(MAX_USERS);
         this->nDislikes = utils::random_uint32(MAX_USERS);
         this->nComments = nComments;
@@ -35,9 +37,14 @@ public:
         return author;
     }
 
-    uint32_t get_id(){
+    [[nodiscard]] uint32_t get_id() const{
         return this->postID;
     }
+
+    [[nodiscard]] PostType get_type() const{
+        return type;
+    }
+
 };
 
 class Comment : public Post{
@@ -45,7 +52,7 @@ class Comment : public Post{
     std::vector<Comment*> answers;
 public:
     Comment(const std::string& content, Publisher* author, const std::vector<Comment*>& answers) :
-            Post(++commentIdCount, utils::random_uint32(5), author){
+            Post(++commentIdCount, utils::random_uint32(5), author, ARTICLE){
         this->content = std::string(content);
         this->answers = answers;
     }
@@ -61,10 +68,6 @@ public:
         }
         fclose(f);
     }
-
-    uint32_t get_id() const{
-        return this->postID;
-    }
 };
 
 class Article : public Post{
@@ -78,7 +81,7 @@ class Article : public Post{
 public:
     Article(const std::string& title, const std::string& description, const std::string& body, Publisher* author,
             const std::vector<Category*>& categories, const std::vector<Topic*>& topics, const std::vector<Comment*>& comments) :
-            Post(++articleIdCount, utils::random_uint32(20), author){
+            Post(++articleIdCount, utils::random_uint32(20), author, COMMENT){
         this->title = utils::stringify(title);
         this->description = utils::stringify(description);
         this->body = utils::stringify(body);
@@ -118,8 +121,8 @@ public:
         return false;
     }
 
-    [[nodiscard]] uint32_t get_id() const{
-        return this->postID;
+    std::vector<Comment*> get_comments() const{
+        return this->comments;
     }
 };
 

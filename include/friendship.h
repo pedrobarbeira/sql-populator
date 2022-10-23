@@ -18,7 +18,7 @@ public:
         this->user2 = user2;
     }
 
-    void to_sql(bool terminal) {
+    void to_sql() {
         FILE *file = fopen(RELATIONSHIP_OUTPUT, "a");
         fprintf(file, RELATIONSHIP_TEMPLATE, this->user1->get_id(), this->user2->get_id(), utils::stringify("Friend").c_str());
         for(auto i : messages){
@@ -35,7 +35,7 @@ public:
         return user2;
     }
 
-    void set_messages(std::vector<Message*> messages){
+    void set_messages(const std::vector<Message*>& messages){
         this->messages = messages;
     }
 };

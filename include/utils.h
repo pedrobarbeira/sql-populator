@@ -12,9 +12,12 @@
 #include <boost/uuid/random_generator.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>
-#include <openssl/sha.h>
-#include <openssl/evp.h>
+extern "C" {
+    #include <openssl/sha.h>
+}
 #include "exceptions.h"
+
+enum PostType{ARTICLE, COMMENT};
 
 namespace utils{
     uint32_t random_uint32(uint32_t max);

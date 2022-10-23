@@ -26,7 +26,7 @@ public:
         this->categoryName = utils::stringify(categoryName);
     }
     void to_sql() const{
-        FILE* f = fopen(CATEGORIES_FILE, "a");
+        FILE* f = fopen(CATEGORIES_OUTPUT, "a");
         fprintf(f, CATEGORY_TEMPLATE, this->categoryID, this->categoryName.c_str());
         fclose(f);
     }
@@ -74,7 +74,7 @@ public:
     }
 
     void to_sql(){
-        FILE* f = fopen(TOPICS_FILE, "a");
+        FILE* f = fopen(TOPICS_OUTPUT, "a");
         fprintf(f, TOPIC_TEMPLATE, this->topicID, this->topicName.c_str(), this->accepted.c_str());
         for (auto i : this->categories){
             fprintf(f, CATEGORY_TOPIC_TEMPLATE, this->topicID, i->get_id());
@@ -85,6 +85,7 @@ public:
     bool contains(Category* c){
         return categories.contains(c);
     }
+
     static std::vector<Topic*> get_topics(){
         if(globalTopics.empty()){
             if(globalCategories.empty()){
@@ -108,8 +109,8 @@ public:
             for(int i = 0; i < MAX_TOPICS; i++){
                 k = utils::random_uint32(words.size());
                 std::set<Category*> topicCategories;
-                for(j = 0; j < utils::random_uint32(globalCategories.size()); j++){
-                    uint32_t x = utils::random_uint32(globalCategories.size());
+                for(j = 0; j < utils::random_uint32(globalCategories.size() - 1); j++){
+                    uint32_t x = utils::random_uint32(globalCategories.size() - 1);
                     topicCategories.insert(globalCategories[x]);
                 }
                 auto topic = new Topic(words[k], topicCategories);

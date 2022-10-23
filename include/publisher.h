@@ -52,7 +52,7 @@ public:
         this->proposedTopics = proposedTopics;
     }
 
-    void to_sql(bool terminal){
+    void to_sql(){
             FILE *file = fopen(USER_OUTPUT, "a");
             fprintf(file, PUBLISHER_TEMPLATE, this->userID, this->name.c_str(), this->email.c_str(), this->password.c_str(),
                     this->creationDate.c_str(),  this->nFriends,this->profilePic.c_str(), this->bio.c_str(), this->posts,

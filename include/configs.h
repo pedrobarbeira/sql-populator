@@ -1,35 +1,38 @@
 #ifndef SQL_POPULATOR_CONFIGS_H
 #define SQL_POPULATOR_CONFIGS_H
 
-#define MAX_USERS 500
+#define MAX_USERS 200
 #define MAX_PROPOSED_TOPICS 2
 #define MAX_FAVORITE_ARTICLES 20
 #define MAX_ADMINS 10
 #define MAX_FRIENDS MAX_USERS / 10
 #define MAX_BANNED_USERS 5
 #define MAX_MESSAGES 10
-#define MAX_ARTICLE_COMMENTS 10
-#define MAX_COMMENT_ANSWERS 5
-#define MAX_COMMENT_CHAR 500
+#define MAX_ARTICLES 800
+#define MAX_ARTICLE_COMMENTS 5
+#define MAX_COMMENT_ANSWERS 3
+#define MAX_COMMENT_CHAR 250
 #define MAX_TOPICS 100
 #define MAX_SEVERITY 7
 #define MAX_USERNAME_SIZE 20
-#define MIN_ARTICLE_WORDS 700
+#define MIN_ARTICLE_WORDS 600
 #define MAX_ARTICLE_CATEGORIES 4
-#define MAX_ARTICLE_TOPICS 10
+#define MAX_ARTICLE_TOPICS 5
 #define MAX_REPORTS 50
 #define MAX_REPORTED_POSTS 10
 #define NUMBER_REASONS 5
 #define PRINT_TO_TERMINAL true
 
-#define USER_OUTPUT "user-data.txt"
-#define RELATIONSHIP_OUTPUT "relationship-data.txt"
-#define ARTICLE_OUTPUT "article-data.txt"
-#define MESSAGE_OUTPUT "message-data.txt"
-#define REPORT_OUTPUT "reportdata.txt"
-#define FAVORITE_OUTPUT "favorite-data.txt"
-#define COMMENT_OUTPUT "comment-data.txt"
-#define POPULATE_FILE "populate.sql"
+#define USER_OUTPUT "out/user-data.txt"
+#define RELATIONSHIP_OUTPUT "out/relationship-data.txt"
+#define ARTICLE_OUTPUT "out/article-data.txt"
+#define MESSAGE_OUTPUT "out/message-data.txt"
+#define REPORT_OUTPUT "out/reportdata.txt"
+#define FAVORITE_OUTPUT "out/favorite-data.txt"
+#define COMMENT_OUTPUT "out/comment-data.txt"
+#define CATEGORIES_OUTPUT "out/categories.txt"
+#define TOPICS_OUTPUT "out/topics-data.txt"
+#define POPULATE_OUTPUT "out/populate.sql"
 
 #define NAMES_FILE "data/names.csv"
 #define SURNAMES_FILE "data/surnames.csv"

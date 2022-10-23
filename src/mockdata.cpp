@@ -2,7 +2,6 @@
 
 template<typename T, typename K>
 void mockdata::mockdata<T, K>::load_name_data() {
-    std::cout << "[LOG] Loading name data\n";
     file = std::ifstream(NAMES_FILE);
     if(file.fail()){
         throw FileNotFoundException(NAMES_FILE);
@@ -30,7 +29,6 @@ void mockdata::mockdata<T, K>::load_name_data() {
 
 template<typename T, typename K>
 void mockdata::mockdata<T, K>::load_surname_data() {
-    std::cout << "[LOG] Loading surname data\n";
     file = std::ifstream(SURNAMES_FILE);
     if(file.fail()){
         throw FileNotFoundException(SURNAMES_FILE);
@@ -67,7 +65,6 @@ void mockdata::mockdata<T, K>::load_publisher_data(const std::vector<Publisher*>
 
 template<typename T, typename K>
 void mockdata::mockdata<T, K>::load_sentence_data() {
-    std::cout << "[LOG] Loading sentence data\n";
     file = std::ifstream(SENTENCES_FILE);
     if(file.fail()){
         throw FileNotFoundException(SENTENCES_FILE);
@@ -113,10 +110,10 @@ Publisher* mockdata::mockdata<T, K>::generate_user() {
     }
     while(true) {
         int size = data.find(NAMES_KEY)->second.size();
-        uint32_t i = utils::random_uint32(size);
+        uint32_t i = utils::random_uint32(size) - 1;
         std::string username = data.find(NAMES_KEY)->second[i];
         size = data.find(SURNAMES_KEY)->second.size();
-        i = utils::random_uint32(size);
+        i = utils::random_uint32(size) - 1;
         username += data.find(SURNAMES_KEY)->second[i];
         if (username.size() < MAX_USERNAME_SIZE && !nameMap.contains(username)){
             nameMap.insert(username);
@@ -145,7 +142,6 @@ Friendship *mockdata::mockdata<T, K>::generate_friendship(Publisher* pub, const 
     bool flag = true;
     uint32_t i;
     while(flag) {
-        //TODO review this
         i = utils::random_uint32(pubs.size()) - 1;
         if (pub->get_id() != pubs[i]->get_id() && pubs[i]->get_friends() < MAX_FRIENDS) {
             if (!this->data.contains(pub->get_id())) {
@@ -159,6 +155,7 @@ Friendship *mockdata::mockdata<T, K>::generate_friendship(Publisher* pub, const 
                     std::set<uint32_t> &set = it->second;
                     if (!set.contains(pub->get_id())) {
                         set.insert(pub->get_id());
+                        it->second = set;
                         flag = false;
                     }
                 }
@@ -168,6 +165,7 @@ Friendship *mockdata::mockdata<T, K>::generate_friendship(Publisher* pub, const 
                     std::set<uint32_t> &set = it->second;
                     if (!set.contains(pubs[i]->get_id())) {
                         set.insert(pubs[i]->get_id());
+                        it->second = set;
                         flag = false;
                     }
                 } else {
@@ -175,6 +173,7 @@ Friendship *mockdata::mockdata<T, K>::generate_friendship(Publisher* pub, const 
                     std::set<uint32_t> &set = it->second;
                     if (!set.contains(pub->get_id())) {
                         set.insert(pub->get_id());
+                        it->second = set;
                         flag = false;
                     }
                 }
@@ -197,12 +196,12 @@ Article *mockdata::mockdata<T, K>::generate_article(const std::vector<Publisher*
         }
     }
     std::vector<std::string> sentences = data.find(SENTENCES_KEY)->second;
-    unsigned int i = utils::random_uint32(sentences.size());
+    unsigned int i = utils::random_uint32(sentences.size()) - 1;
     std::string title = sentences[i];
     std::stringstream ss;
     uint32_t count = 0;
     for(;count<10;count++){
-        i = utils::random_uint32(sentences.size());
+        i = utils::random_uint32(sentences.size()) - 1;
         ss << sentences[i];
         if(!ss.str().empty()) ss << " ";
     }
@@ -210,24 +209,27 @@ Article *mockdata::mockdata<T, K>::generate_article(const std::vector<Publisher*
     ss.clear();
     count = 0;
     while (count < MIN_ARTICLE_WORDS) {
-        i = utils::random_uint32(sentences.size());
+        i = utils::random_uint32(sentences.size()) - 1;
         ss << sentences[i];
         if (!ss.str().empty()) ss << " ";
         count += utils::wcount(sentences[i]);
     }
     std::string body = ss.str();
-    i = utils::random_uint32(pubs.size());
+    i = utils::random_uint32(pubs.size()) - 1;
     Publisher* author = pubs[i];
+    std::cout << "\t\t[LOG] Generating article categories\n";
     std::vector<Category*> articleCategories = generate_article_categories();
+    std::cout << "\t\t[LOG] Generating article topics\n";
     std::vector<Topic*> articleTopics = generate_article_topics(articleCategories);
-    std::vector<Comment*> comments;// = generate_article_comments(pubs);
+    std::cout << "\t\t[LOG] Generating article comments\n";
+    std::vector<Comment*> comments = generate_article_comments(pubs);
     return new Article(title, description, body, author, articleCategories, articleTopics, comments);
 }
 
 template<typename T, typename K>
 std::vector<Message*> mockdata::mockdata<T, K>::generate_message(Friendship *f) {
-    uint32_t i = utils::random_uint32(MAX_MESSAGES);
-    uint32_t j = utils::random_uint32(MAX_MESSAGES);
+    uint32_t i = utils::random_uint32(MAX_MESSAGES) - 1;
+    uint32_t j = utils::random_uint32(MAX_MESSAGES) - 1;
     if(!data.contains(SENTENCES_KEY)){
         try{
             load_sentence_data();
@@ -239,12 +241,12 @@ std::vector<Message*> mockdata::mockdata<T, K>::generate_message(Friendship *f) 
     std::vector<std::string> sentences = data.find(SENTENCES_KEY)->second;
     std::vector<Message*> toReturn;
     for (;i>0;i--){
-        k = utils::random_uint32(sentences.size());
+        k = utils::random_uint32(sentences.size()) - 1;
         auto message = new Message(f->get_user_1(), f->get_user_2(), sentences[k]);
         toReturn.push_back(message);
     }
     for (;j>0;j--){
-        k = utils::random_uint32(sentences.size());
+        k = utils::random_uint32(sentences.size()) - 1;
         auto message = new Message(f->get_user_2(), f->get_user_1(), sentences[k]);
         toReturn.push_back(message);
     }
@@ -257,7 +259,7 @@ std::vector<Topic *> mockdata::mockdata<T, K>::generate_user_topics() const {
     std::vector<Topic*> toReturn;
     uint32_t j;
     for(int i = 0; i < MAX_TOPICS; i++){
-        j = utils::random_uint32(topics.size());
+        j = utils::random_uint32(topics.size()) - 1;
         toReturn.push_back(topics[j]);
     }
     return toReturn;
@@ -269,8 +271,8 @@ std::vector<Topic *> mockdata::mockdata<T, K>::generate_proposed_topics() const 
     std::vector<Topic*> toReturn;
     uint32_t j;
     uint32_t i = 0;
-    while(i < utils::random_uint32(MAX_PROPOSED_TOPICS)){
-        j = utils::random_uint32(topics.size());
+    while(i < utils::random_uint32(MAX_PROPOSED_TOPICS) - 1){
+        j = utils::random_uint32(topics.size()) - 1;
         if(!topics[j]->isAccepted()) {
             toReturn.push_back(topics[j]);
             i++;
@@ -286,7 +288,7 @@ std::vector<Category *> mockdata::mockdata<T, K>::generate_article_categories() 
     uint32_t i = utils::random_uint32(MAX_ARTICLE_CATEGORIES);
     uint32_t j;
     for(;i>0;i--){
-        j = utils::random_uint32(categories.size());
+        j = utils::random_uint32(categories.size()) - 1;
         toReturn.push_back(categories[j]);
     }
     return toReturn;
@@ -294,14 +296,15 @@ std::vector<Category *> mockdata::mockdata<T, K>::generate_article_categories() 
 
 template<typename T, typename K>
 std::vector<Topic *>
-mockdata::mockdata<T, K>::generate_article_topics(const std::vector<Category *> &articleCategories) const {
+mockdata::mockdata<T, K>::generate_article_topics(const std::vector<Category*> &articleCategories) const {
     std::vector<Topic*> toReturn;
     std::vector<Topic*> topics = Topic::get_topics();
-    uint32_t i = utils::random_uint32(MAX_ARTICLE_TOPICS);
+    uint32_t i = utils::random_uint32(MAX_ARTICLE_TOPICS) - 1;
     uint32_t j;
     Topic* t;
+    uint32_t retries = 5;
     while(i>0){
-        j = utils::random_uint32(topics.size());
+        j = utils::random_uint32(topics.size()) - 1;
         t = topics[j];
         for(auto c : articleCategories){
             if(t->contains(c)){
@@ -309,6 +312,69 @@ mockdata::mockdata<T, K>::generate_article_topics(const std::vector<Category *> 
                 i--;
                 break;
             }
+            else{
+                if (!retries){
+                    retries = 5;
+                    i--;
+                    if(i <= 0){
+                        break;
+                    }
+                }
+                else{
+                    retries--;
+                }
+            }
+        }
+    }
+    return toReturn;
+}
+
+template<typename T, typename K>
+Comment * mockdata::mockdata<T, K>::generate_comment(const std::vector<Publisher*>& pubs, bool answer) const {
+    uint32_t commentSize = utils::random_uint32(MAX_COMMENT_CHAR) - 1;
+    uint32_t size = 0, i;
+    std::stringstream content;
+    std::vector<std::string> sentences = data.find(SENTENCES_KEY)->second;
+    while(size < commentSize){
+        i = utils::random_uint32(sentences.size()) - 1;
+        content << sentences[i];
+        size += sentences[i].size();
+        if(size < commentSize){
+            content << " ";
+        }
+    }
+    std::vector<Comment*> answers;
+    if(answer){
+        answers = generate_comment_answers(pubs, false);
+    }
+    i = utils::random_uint32(pubs.size()) - 1;
+    return new Comment(content.str(), pubs[i], answers);
+}
+
+template<typename T, typename K>
+std::vector<Comment *>
+mockdata::mockdata<T, K>::generate_article_comments(const std::vector<Publisher*> &pubs) {
+    std::vector<Comment*> toReturn;
+    if(utils::random_bool()) {
+        uint32_t i = utils::random_uint32(MAX_ARTICLE_COMMENTS) - 1;
+        uint32_t j;
+        while (i > 0) {
+            toReturn.push_back(generate_comment(pubs, true));
+            i--;
+        }
+    }
+    return toReturn;
+}
+
+template<typename T, typename K>
+std::vector<Comment *> mockdata::mockdata<T, K>::generate_comment_answers(const std::vector<Publisher *> &pubs, bool answer) const {
+    std::vector<Comment*> toReturn;
+    if(utils::random_bool()) {
+        uint32_t i = utils::random_uint32(MAX_COMMENT_ANSWERS) - 1;
+        uint32_t j;
+        while (i > 0) {
+            toReturn.push_back(generate_comment(pubs, answer));
+            i--;
         }
     }
     return toReturn;
@@ -319,10 +385,8 @@ std::vector<Publisher*> mockdata::generate_users(uint32_t n){
     mockdata<std::string, std::vector<std::string>> mock;
     std::vector<Publisher*> toReturn;
     for(int i = 1; i <= n; i++){
-        std::cout << "[LOG] Generating user " << i << "\n";
         toReturn.push_back(mock.generate_user());
     }
-    std::cout << "[LOG] Clearing name data\n";
     mock.clear_name_data();
     return toReturn;
 }
@@ -331,7 +395,7 @@ std::vector<Friendship*> mockdata::generate_relationships(const std::vector<Publ
     std::vector<Friendship*> toReturn;
     mockdata<std::uint32_t, std::set<uint32_t>> mock;
     for(auto pub : pubs) {
-        uint32_t i = utils::random_uint32(MAX_FRIENDS);
+        uint32_t i = utils::random_uint32(MAX_FRIENDS) - 1;
         while (i > 0) {
             toReturn.push_back(mock.generate_friendship(pub, pubs));
             i--;
@@ -344,7 +408,7 @@ std::vector<Article*> mockdata::generate_articles(uint32_t n, const std::vector<
     mockdata<std::string, std::vector<std::string>> mock;
     std::vector<Article*> articles;
     for(int i = 1;i<=n;i++){
-        std::cout << "[LOG] Generating article " << i << "\n";
+        std::cout << "\t[LOG] Generating article [" << i << "/" << n << "]\n";
         articles.push_back(mock.generate_article(pubs));
     }
     return articles;
@@ -364,8 +428,8 @@ std::vector<Favorite*>mockdata::generate_favorites(const std::vector<Article *> 
     std::vector<Favorite*> toReturn;
     uint32_t k;
     for(auto pub : pubs){
-        for(uint32_t i = 0; i < utils::random_uint32(MAX_FAVORITE_ARTICLES); i++){
-            k = utils::random_uint32(articles.size());
+        for(uint32_t i = 0; i < utils::random_uint32(MAX_FAVORITE_ARTICLES) - 1; i++){
+            k = utils::random_uint32(articles.size()) - 1;
             auto favorite = new Favorite(pub->get_id(), articles[k]->get_id());
             toReturn.push_back(favorite);
         }
@@ -374,28 +438,108 @@ std::vector<Favorite*>mockdata::generate_favorites(const std::vector<Article *> 
 }
 
 std::vector<UserReport *>
-mockdata::generate_reports(const std::vector<Post*> &posts, const bool& article, const std::vector<Publisher*> &pubs) {
+mockdata::generate_reports(const std::vector<Post*> &posts, const std::vector<Publisher*> &pubs) {
     std::vector<UserReport*> toReturn;
     std::vector<ReportReason*> reasons = ReportReason::get_reasons();
     uint32_t j, l, m;
     for(uint32_t i = 0; i < MAX_REPORTED_POSTS; i++){
-        j = utils::random_uint32(posts.size());
+        j = utils::random_uint32(posts.size()) - 1;
         for(uint32_t k = 0; k < MAX_REPORTS; k++){
-            l = utils::random_uint32(pubs.size());
-            m = utils::random_uint32(NUMBER_REASONS);
-            auto report = new UserReport(reasons[m], posts[j], article, pubs[l]);
+            l = utils::random_uint32(pubs.size()) - 1;
+            m = utils::random_uint32(NUMBER_REASONS) - 1;
+            auto report = new UserReport(reasons[m], posts[j], pubs[l]);
             toReturn.push_back(report);
         }
     }
     return toReturn;
 }
 
+std::vector<Post*> mockdata::get_posts(const std::vector<Article*>& articles){
+    std::vector<Post*> toReturn;
+    for(auto i : articles){
+        toReturn.push_back(i);
+        for(auto j : i -> get_comments()){
+            toReturn.push_back(j);
+        }
+    }
+    return toReturn;
+}
+
 void mockdata::generate_mock_data(){
-    //Generates all data and writes to txt files;
+    std::vector<Category*> categories = Category::get_categories();
+    std::vector<Topic*> topics = Topic::get_topics();
+    std::cout << "[LOG] Generating users\n";
+    std::vector<Publisher*> pubs = generate_users(MAX_USERS);
+    std::cout << "[LOG] Generating friendships\n";
+    std::vector<Friendship*> friends = generate_relationships(pubs);
+    std::cout << "[LOG] Generating articles\n";
+    std::vector<Article*> articles = generate_articles(MAX_ARTICLES, pubs);
+    std::cout << "[LOG] Generating messages\n";
+    std::vector<Message*> messages = generate_messages(friends);
+    std::cout << "[LOG] Generating reports\n";
+    std::vector<Post*> posts = get_posts(articles);
+    std::vector<UserReport*> reports = generate_reports(posts, pubs);
+    std::cout << "[LOG] Generating favorites\n";
+    std::vector<Favorite*> favorites = generate_favorites(articles, pubs);
+    std::cout << "[LOG] Saving categories\n";
+    for(auto i :categories){
+        i-> to_sql();
+    }
+    std::cout << "[LOG] Saving topics\n";
+    for(auto i :topics){
+        i->to_sql();
+    }
+    std::cout << "[LOG] Saving publishers\n";
+    for(auto i : pubs){
+        i->to_sql();
+    }
+    std::cout << "[LOG] Saving friends\n";
+    for(auto i : friends){
+        i->to_sql();
+    }
+    std::cout << "[LOG] Saving articles\n";
+    for(auto i : articles){
+        i->to_sql();
+    }
+    std::cout << "[LOG] Saving messages\n";
+    for(auto i : messages){
+        i->to_sql();
+    }
+    std::cout << "[LOG] Saving reports\n";
+    for(auto i : reports){
+        i->to_sql();
+    }
+    std::cout << "[LOG] Saving favores\n";
+    for(auto i : favorites){
+        i->to_sql();
+    }
+    std::cout << "[LOG] Creating populate.sql\n";
+    std::vector<std::string> data = {CATEGORIES_OUTPUT,
+                                     TOPICS_OUTPUT,
+                                     USER_OUTPUT,
+                                     RELATIONSHIP_OUTPUT,
+                                     ARTICLE_OUTPUT,
+                                     COMMENT_OUTPUT,
+                                     MESSAGE_OUTPUT,
+                                     REPORT_OUTPUT,
+                                     FAVORITE_OUTPUT};
+    std::ifstream file;
+    std::string line;
+    std::ofstream final(POPULATE_OUTPUT);
+    if(!final.is_open()){
+        std::cout << "[LOG] Failed to open file " << POPULATE_OUTPUT << "\n";
+    }
+    for(auto i : data){
+        file = std::ifstream(i);
+        if(!file.is_open()){
+            std::cout << "[LOG] Failed to open file " << i << "\n";
+        }
+        while(!file.eof()){
+            std::getline(file, line);
+            final << line;
+        }
+        file.close();
+    }
+    final.close();
+    std::cout << "[LOG] DONE\n";
 }
-
-void mockdata::sqlizer() {
-    generate_mock_data();
-    //appends txt files into populate.sql
-}
-

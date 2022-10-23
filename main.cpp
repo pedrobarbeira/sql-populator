@@ -2,6 +2,6 @@
 #include "include/mockdata.h"
 
 int main() {
-    std::cout << "hello world";
+    mockdata::generate_mock_data();
     return 0;
 }

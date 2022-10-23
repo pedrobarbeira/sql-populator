@@ -3,6 +3,8 @@ project(sql_populator)
 
 set(CMAKE_CXX_STANDARD 23)
 
+link_libraries(crypto)
+
 set(Boost_INCLUDE_DIR /usr/local/include/boost)
 set(Boost_LIBRARY_DIR /usr/local/lib)
 find_package(Boost 1.80.0)
