@@ -217,11 +217,8 @@ Article *mockdata::mockdata<T, K>::generate_article(const std::vector<Publisher*
     std::string body = ss.str();
     i = utils::random_uint32(pubs.size()) - 1;
     Publisher* author = pubs[i];
-    std::cout << "\t\t[LOG] Generating article categories\n";
     std::vector<Category*> articleCategories = generate_article_categories();
-    std::cout << "\t\t[LOG] Generating article topics\n";
     std::vector<Topic*> articleTopics = generate_article_topics(articleCategories);
-    std::cout << "\t\t[LOG] Generating article comments\n";
     std::vector<Comment*> comments = generate_article_comments(pubs);
     return new Article(title, description, body, author, articleCategories, articleTopics, comments);
 }
@@ -417,20 +414,22 @@ std::vector<Article*> mockdata::generate_articles(uint32_t n, const std::vector<
 std::vector<Message*> mockdata::generate_messages(const std::vector<Friendship*> &friends) {
     std::vector<Message*> toReturn;
     mockdata<std::string, std::vector<std::string>> mock;
-    for(auto i : friends){
-        std::vector<Message*> messages = mock.generate_message(i);
-        i->set_messages(messages);
+    for(int i = 1; i <= friends.size();i++){
+        std::cout << "[LOG] Generating conversation [" << i << "/" << friends.size() << "]\n";
+        std::vector<Message*> messages = mock.generate_message(friends[i]);
+        friends[i]->set_messages(messages);
     }
     return toReturn;
 }
 
-std::vector<Favorite*>mockdata::generate_favorites(const std::vector<Article *> &articles, const std::vector<Publisher *> &pubs) {
+std::vector<Favorite*>mockdata::generate_favorites(const std::vector<Article*> &articles, const std::vector<Publisher *> &pubs) {
     std::vector<Favorite*> toReturn;
     uint32_t k;
-    for(auto pub : pubs){
+    for(int i = 1; i <= pubs.size(); i++){
+        std::cout << "[LOG] Generating favorites [" << i << "/" << pubs.size() << "]\n";
         for(uint32_t i = 0; i < utils::random_uint32(MAX_FAVORITE_ARTICLES) - 1; i++){
             k = utils::random_uint32(articles.size()) - 1;
-            auto favorite = new Favorite(pub->get_id(), articles[k]->get_id());
+            auto favorite = new Favorite(pubs[i]->get_id(), articles[k]->get_id());
             toReturn.push_back(favorite);
         }
     }
@@ -443,6 +442,7 @@ mockdata::generate_reports(const std::vector<Post*> &posts, const std::vector<Pu
     std::vector<ReportReason*> reasons = ReportReason::get_reasons();
     uint32_t j, l, m;
     for(uint32_t i = 0; i < MAX_REPORTED_POSTS; i++){
+        std::cout << "[LOG] Generating report [" << i << "/" << MAX_REPORTED_POSTS << "]\n";
         j = utils::random_uint32(posts.size()) - 1;
         for(uint32_t k = 0; k < MAX_REPORTS; k++){
             l = utils::random_uint32(pubs.size()) - 1;
